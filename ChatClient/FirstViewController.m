@@ -47,5 +47,7 @@
     NSString *response  = [NSString stringWithFormat:@"iam:%@\r\n", _inputNameField.text];
     NSData *data = [[NSData alloc] initWithData:[response dataUsingEncoding:NSASCIIStringEncoding]];
     [outputStream write:[data bytes] maxLength:[data length]];
+    
+    [self.view bringSubviewToFront:FirstViewController];
 }
 @end

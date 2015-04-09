@@ -7,10 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
-
+NSMutableArray * messages;
 @interface SecondViewController : UIViewController <NSStreamDelegate, UITableViewDelegate, UITableViewDataSource>
-@property (weak, nonatomic) IBOutlet UITextField *inputMessageField;
-@property (weak, nonatomic) IBOutlet UITableView *tView;
+@property (strong, nonatomic) IBOutlet UITextField *inputMessageField;
+@property (strong, nonatomic) IBOutlet UITableView *tView;
 - (IBAction)sendMessage:(UIButton *)sender;
 
 

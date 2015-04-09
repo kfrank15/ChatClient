@@ -9,7 +9,7 @@
 #import "SecondViewController.h"
 
 @interface SecondViewController ()
-@property (weak, nonatomic) IBOutlet UITabBarItem *chatView;
+@property (strong, nonatomic) IBOutlet UITabBarItem *chatView;
 
 @end
 
@@ -18,6 +18,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+    messages = [[NSMutableArray alloc] init];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -26,6 +27,9 @@
 }
 
 - (IBAction)sendMessage:(UIButton *)sender {
+    NSString *response  = [NSString stringWithFormat:@"msg:%@", _inputMessageField.text];
+    NSData *data = [[NSData alloc] initWithData:[response dataUsingEncoding:NSASCIIStringEncoding]];
+    [NSOutputStream write:[data bytes] maxLength:[data length]];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -37,6 +41,9 @@
         cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier] autorelease];
     }
     
+    NSString *s = (NSString *) [messages objectAtIndex:indexPath.row];
+    cell.textLabel.text = s;
+    
     return cell;
     
 }
@@ -46,7 +53,49 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 0;
+    return messages.count;
+}
+
+- (void)stream:(NSStream *)theStream handleEvent:(NSStreamEvent)streamEvent {
+    
+    switch (streamEvent) {
+            
+        case NSStreamEventOpenCompleted:
+            NSLog(@"Stream opened");
+            break;
+            
+        case NSStreamEventHasBytesAvailable:
+            
+            if (theStream == inputStream) {
+                
+                uint8_t buffer[1024];
+                int len;
+                
+                while ([inputStream hasBytesAvailable]) {
+                    len = [inputStream read:buffer maxLength:sizeof(buffer)];
+                    if (len > 0) {
+                        
+                        NSString *output = [[NSString alloc] initWithBytes:buffer length:len encoding:NSASCIIStringEncoding];
+                        
+                        if (nil != output) {
+                            NSLog(@"server said: %@", output);
+                        }
+                    }
+                }
+            }
+            break;
+            
+        case NSStreamEventErrorOccurred:
+            NSLog(@"Can not connect to the host!");
+            break;
+            
+        case NSStreamEventEndEncountered:
+            break;
+            
+        default:
+            NSLog(@"Unknown event");
+    }
+    
 }
 
 @end

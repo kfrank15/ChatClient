@@ -48,6 +48,6 @@
     NSData *data = [[NSData alloc] initWithData:[response dataUsingEncoding:NSASCIIStringEncoding]];
     [outputStream write:[data bytes] maxLength:[data length]];
     
-    [self.view bringSubviewToFront:FirstViewController];
+//    [self.view bringSubviewToFront:chatView];
 }
 @end

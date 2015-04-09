@@ -8,7 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
-@interface FirstViewController : UIViewController
+NSInputStream *inputStream;
+NSOutputStream *outputStream;
+
+@interface FirstViewController : UIViewController <NSStreamDelegate>
+@property (weak, nonatomic) IBOutlet UITextField *inputNameField;
+@property (strong, nonatomic) IBOutlet UIView *joinView;
+- (IBAction)joinChat:(UIButton *)sender;
 
 
 @end

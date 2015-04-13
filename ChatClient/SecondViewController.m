@@ -66,13 +66,13 @@
             
         case NSStreamEventHasBytesAvailable:
             
-            if (theStream == inputStream) {
+            if (theStream == NSInputStream) {
                 
                 uint8_t buffer[1024];
                 int len;
                 
-                while ([inputStream hasBytesAvailable]) {
-                    len = [inputStream read:buffer maxLength:sizeof(buffer)];
+                while ([NSInputStream hasBytesAvailable]) {
+                    len = [NSInputStream read:buffer maxLength:sizeof(buffer)];
                     if (len > 0) {
                         
                         NSString *output = [[NSString alloc] initWithBytes:buffer length:len encoding:NSASCIIStringEncoding];
